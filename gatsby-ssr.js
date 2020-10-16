@@ -1,6 +1,17 @@
-/**
- * Implement Gatsby's SSR (Server Side Rendering) APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/ssr-apis/
- */
-// You can delete this file if you're not using it
+const cheerio = require('cheerio')
+
+exports.onRenderBody = ({pathname, bodyHtml, ...hash}) => {
+    if (!bodyHtml) return
+
+    console.log(pathname)
+    const $ = cheerio.load(bodyHtml)
+    console.log($('h1').text())
+    $('p').each(function () {
+        console.log($(this).text())
+    })
+
+    console.log('Done')
+
+    // console.log(pathname)
+    // console.log(bodyHtml)
+}
