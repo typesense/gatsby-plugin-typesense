@@ -4,10 +4,9 @@
   "description": "A gatsby plugin to index site content to Typesense",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "testground:build": "npm link && cd test/support/testground && npm install && npm link gatsby-plugin-typesense && gatsby build",
     "typesenseServer": "docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.15.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors",
-    "createCollection": "script"
+    "test": "npm run testground:build && jest"
   },
   "keywords": [
     "gatsby",
@@ -18,7 +17,10 @@
   "author": "Jason Bosco <jason@typesense.org>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/runtime": "^7.10.2"
+    "@babel/runtime": "^7.10.2",
+    "axios-mock-adapter": "^1.18.2",
+    "jest": "^26.5.3",
+    "rewire": "^5.0.0"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",

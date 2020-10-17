@@ -74,17 +74,19 @@ async function indexContentInTypesense({
   }
 }
 
+let generateNewCollectionName = collectionSchema => {
+  return `${collectionSchema.name}_${Date.now()}`
+}
+
 exports.onPostBuild = async (
-  { reporter, ...hash },
+  { reporter },
   { server, collectionSchema, publicDir }
 ) => {
-  // console.log(hash);
-
   reporter.verbose("[Typesense] Getting list of HTML files")
   const htmlFiles = await getHTMLFilesRecursively(publicDir)
 
   const typesense = new TypesenseClient(server)
-  const newCollectionName = `${collectionSchema.name}_${Date.now()}`
+  const newCollectionName = generateNewCollectionName(collectionSchema)
   const newCollectionSchema = { ...collectionSchema }
   newCollectionSchema.name = newCollectionName
 
@@ -131,7 +133,13 @@ exports.onPostBuild = async (
     reporter.info(
       `[Typesense] Content indexed to "${collectionSchema.name}" [${newCollectionName}]`
     )
+  } catch (error) {
+    reporter.error(
+      `[Typesense] Could not upsert alias ${collectionSchema.name} -> ${newCollectionName}: ${error}`
+    )
+  }
 
+  try {
     if (oldCollectionName) {
       reporter.verbose(
         `[Typesense] Deleting old collection ${oldCollectionName}`
