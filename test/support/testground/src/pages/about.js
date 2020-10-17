@@ -6,7 +6,9 @@ export default function About() {
   return (
     <div>
       <Header pageName="About" />
-      About
+      <div data-typesense-field={"description"}>
+        This is some about us content
+      </div>
       <Footer />
     </div>
   )

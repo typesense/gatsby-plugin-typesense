@@ -5,16 +5,27 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "testground:build": "npm link && cd test/support/testground && npm install && npm link gatsby-plugin-typesense && gatsby build"
+    "testground:build": "npm link && cd test/support/testground && npm install && npm link gatsby-plugin-typesense && gatsby build",
+    "typesenseServer": "docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.15.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors",
+    "createCollection": "script"
   },
   "keywords": [
     "gatsby",
     "gatsby-plugin",
-    "typesense"
+    "typesense",
+    "search"
   ],
   "author": "Jason Bosco <jason@typesense.org>",
   "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/runtime": "^7.10.2"
+  },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3"
+    "cheerio": "^1.0.0-rc.3",
+    "prettier": "^2.1.2",
+    "typesense": "^0.7.1"
+  },
+  "peerDependencies": {
+    "@babel/runtime": "^7.10.2"
   }
 }

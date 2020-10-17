@@ -9,7 +9,41 @@ module.exports = {
   plugins: [
     {
       resolve: `gatsby-plugin-typesense`,
-      options: {},
+      options: {
+        publicDir: `${__dirname}/public`,
+        collectionSchema: {
+          name: "pages_v1",
+          fields: [
+            {
+              name: "title",
+              type: "string",
+            },
+            {
+              name: "description",
+              type: "string",
+            },
+            {
+              name: "page_path",
+              type: "string",
+            },
+            {
+              name: "page_priority_score",
+              type: "int32",
+            },
+          ],
+          default_sorting_field: "page_priority_score",
+        },
+        server: {
+          apiKey: "xyz",
+          nodes: [
+            {
+              host: "localhost",
+              port: "8108",
+              protocol: "http",
+            },
+          ],
+        },
+      },
     },
   ],
 }

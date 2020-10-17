@@ -1,5 +1,9 @@
 import React from "react"
 
 export default function Header(props) {
-  return <h1>Header {props.pageName}</h1>
+  return (
+    <div>
+      <h1 data-typesense-field={"title"}>{props.pageName}</h1>
+    </div>
+  )
 }

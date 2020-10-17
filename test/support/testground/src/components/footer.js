@@ -1,11 +1,14 @@
 import React from "react"
 import { Link } from "gatsby"
 
-export default function Footer() {
+export default function Footer(props) {
   return (
-    <nav>
-      <Link to="/">Home</Link>
-      <Link to="/about/">About</Link>
-    </nav>
+    <div>
+      <nav>
+        <Link to="/">Home</Link>
+        <br />
+        <Link to="/about/">About</Link>
+      </nav>
+    </div>
   )
 }
