@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "A gatsby plugin to index site content to Typesense",
   "main": "index.js",
+  "engines": {
+    "node": ">=0.11.0"
+  },
   "scripts": {
     "testground:build": "npm link && cd test/support/testground && npm install && npm link gatsby-plugin-typesense && gatsby build",
     "typesenseServer": "docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.15.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors",
