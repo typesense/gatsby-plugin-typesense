@@ -58,10 +58,10 @@ describe("gatsby-node.js", () => {
   }
 
   beforeEach(() => {
-    gatsbyNode.__set__(
-      "generateNewCollectionName",
-      jest.fn(() => NEW_COLLECTION_NAME)
-    )
+    const mockUtils = require("../lib/utils")
+    mockUtils.generateNewCollectionName = jest.fn(() => NEW_COLLECTION_NAME)
+    gatsbyNode.__set__("utils", mockUtils)
+
     mockAxios = new MockAxiosAdapter(axios)
     mockAxios
       .onPost("http://localhost:8108/collections", undefined, {

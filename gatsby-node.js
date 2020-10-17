@@ -1,30 +1,9 @@
 const fs = require("fs").promises
-const path = require("path")
 const cheerio = require("cheerio")
 const TypesenseClient = require("typesense").Client
-
 const TYPESENSE_ATTRIBUTE_NAME = "data-typesense-field"
 
-async function getHTMLFilesRecursively(dir) {
-  const dirEnts = await fs.readdir(dir, { withFileTypes: true })
-  const files = await Promise.all(
-    dirEnts.map(dirEnt => {
-      const fullPath = path.resolve(dir, dirEnt.name)
-      if (dirEnt.isDirectory()) {
-        return getHTMLFilesRecursively(fullPath)
-      } else if (path.extname(fullPath) === ".html") {
-        return fullPath
-      } else {
-        return null
-      }
-    })
-  )
-  return files.flat().filter(e => e)
-}
-
-function isObjectEmpty(object) {
-  return Object.keys(object).length === 0 && object.constructor === Object
-}
+let utils = require("./lib/utils")
 
 async function indexContentInTypesense({
   fileContents,
@@ -42,7 +21,7 @@ async function indexContentInTypesense({
     typesenseDocument[attributeName] = attributeValue
   })
 
-  if (isObjectEmpty(typesenseDocument)) {
+  if (utils.isObjectEmpty(typesenseDocument)) {
     reporter.warn(
       `[Typesense] No HTMLelements had the ${TYPESENSE_ATTRIBUTE_NAME} attribute, skipping page`
     )
@@ -74,19 +53,15 @@ async function indexContentInTypesense({
   }
 }
 
-let generateNewCollectionName = collectionSchema => {
-  return `${collectionSchema.name}_${Date.now()}`
-}
-
 exports.onPostBuild = async (
   { reporter },
   { server, collectionSchema, publicDir }
 ) => {
   reporter.verbose("[Typesense] Getting list of HTML files")
-  const htmlFiles = await getHTMLFilesRecursively(publicDir)
+  const htmlFiles = await utils.getHTMLFilesRecursively(publicDir)
 
   const typesense = new TypesenseClient(server)
-  const newCollectionName = generateNewCollectionName(collectionSchema)
+  const newCollectionName = utils.generateNewCollectionName(collectionSchema)
   const newCollectionSchema = { ...collectionSchema }
   newCollectionSchema.name = newCollectionName
 
