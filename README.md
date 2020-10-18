@@ -1,113 +1,198 @@
-<p align="center">
-  <a href="https://www.gatsbyjs.com">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
+# gatsby-plugin-typesense
+
+## Description
+
+Plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www.gatsbyjs.com/)-powered sites using [Typesense](http://typesense.org/). 
+
+This plugin runs post-build and indexes the content you specify to Typesense. The search UI is then built with the [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter) library.
+
+Get a quick overview of Typesense in [this guide](https://typesense.org/guide/).
+
+## How to install
+
+```bash
+npm install gatsby-plugin-typesense
+```
+
+Also install peer dependencies:
+
+```bash
+npm install @babel/runtime
+```
+
+## How it works
+
+On post build, this plugin scans Gatsby's public directory looking for HTML files. Within each HTML file, it looks for HTML elements that have a data attribute called `data-typesense-field` and creates a Typesense `Document` with the value of that data attribute as the key, and the text content of that HTML element as the value. 
+
+Here's an example: if you have the following HTML snippet in a file:
+
+```html
+<!-- ./public/about/index.html -->
+
+...
+
+<h1 data-typesense-field="title">About Us</h1>
+<p data-typesense-field="description">
+  Hello, we are Stark Industries.
 </p>
-<h1 align="center">
-  Starter for a Gatsby Plugin
-</h1>
 
-A minimal boilerplate for the essential files Gatsby looks for in a plugin.
+...
 
-## 🚀 Quick start
-
-To get started creating a new plugin, you can follow these steps:
-
-1. Initialize a new plugin from the starter with `gatsby new`
-
-```shell
-gatsby new my-plugin https://github.com/gatsbyjs/gatsby-starter-plugin
 ```
 
-If you already have a Gatsby site, you can use it. Otherwise, you can [create a new Gatsby site](https://www.gatsbyjs.com/tutorial/part-zero/#create-a-gatsby-site) to test your plugin.
+When you build your site, this plugin will index this page as the following structured document in Typesense:
 
-Your directory structure will look similar to this:
-
-```text
-/my-gatsby-site
-├── gatsby-config.js
-└── /src
-    └── /pages
-        └── /index.js
-/my-plugin
-├── gatsby-browser.js
-├── gatsby-node.js
-├── gatsby-ssr.js
-├── index.js
-├── package.json
-└── README.md
+```json
+{
+  "title": "About Us",
+  "description": "Hello, we are Stark Industries.",
+  "page_path": "/about/",
+  "page_priority_score": 10
+}
 ```
 
-With `my-gatsby-site` being your Gatsby site, and `my-plugin` being your plugin. You could also include the plugin in your [site's `plugins` folder](https://www.gatsbyjs.com/docs/loading-plugins-from-your-local-plugins-folder/).
+You'll then be able to query this collection of documents (pages) from Typesense, via your [Search UI components](https://github.com/typesense/typesense-instantsearch-adapter).
 
-2. Include the plugin in a Gatsby site
+You can also add any arbitrary fields to the document, by adding the `data-typesense-field` data attribute to any HTML element.
 
-Inside of the `gatsby-config.js` file of your site (in this case, `my-gatsby-site`), include the plugin in the `plugins` array:
+## How to use
+
+### Step 1: Configure the plugin
 
 ```javascript
+// gatsby-config.js
+
 module.exports = {
   plugins: [
-    // other gatsby plugins
-    // ...
-    require.resolve(`../my-plugin`),
+    {
+      resolve: `gatsby-plugin-typesense`,
+      options: {
+        publicDir: `${__dirname}/public`, // Required
+        collectionSchema: { // Required
+          name: "pages_v1",
+          fields: [
+            {
+              name: "title",
+              type: "string",
+            },
+            {
+              name: "description",
+              type: "string",
+            },
+            {
+              name: "page_path", // Required
+              type: "string",
+            },
+            {
+              name: "page_priority_score", // Required
+              type: "int32",
+            },
+          ],
+          default_sorting_field: "page_priority_score",  // Required
+        },
+        server: { // Required
+          apiKey: "xyz",
+          nodes: [
+            {
+              host: "localhost",
+              port: "8108",
+              protocol: "http",
+            },
+          ],
+        },
+      },
+    },
   ],
 }
 ```
 
-The line `require.resolve('../my-plugin')` is what accesses the plugin based on its filepath on your computer, and adds it as a plugin when Gatsby runs.
+Here's what the options mean:
 
-_You can use this method to test and develop your plugin before you publish it to a package registry like npm. Once published, you would instead install it and [add the plugin name to the array](https://www.gatsbyjs.com/docs/using-a-plugin-in-your-site/). You can read about other ways to connect your plugin to your site including using `npm link` or `yarn workspaces` in the [doc on creating local plugins](https://www.gatsbyjs.com/docs/creating-a-local-plugin/#developing-a-local-plugin-that-is-outside-your-project)._
+##### `publicDir`
 
-3. Verify the plugin was added correctly
+The directory that the plugin will scan for HTML files to index. 
 
-The plugin added by the starter implements a single Gatsby API in the `gatsby-node` that logs a message to the console. When you run `gatsby develop` or `gatsby build` in the site that implements your plugin, you should see this message.
+This is the directory where Gatsby usually places your build files when you run `gatsby build`. This is almost always `./public` relative to your repo root, unless you've changed it.
 
-You can verify your plugin was added to your site correctly by running `gatsby develop` for the site.
+##### `collectionSchema`
 
-You should now see a message logged to the console in the preinit phase of the Gatsby build process:
+The schema that will be used to create the collection in Typesense. 
 
-```shell
-$ gatsby develop
-success open and validate gatsby-configs - 0.033s
-success load plugins - 0.074s
-Loaded gatsby-starter-plugin
-success onPreInit - 0.016s
-...
+A quick recap of Typesense terminology, if you haven't already read [the guide](https://typesense.org/guide/): A `Collection` contains many `Documents`. You create a `Collection` with a specific schema and then all `Documents` that are added to that `Collection` will be validated against that schema. You issue search queries against a `Collection` of `Documents`.
+
+While the schema in the example above is a great starting point, you can choose to customize the schema to your needs. For eg: when you need to index more structured data from your pages like price, category, tags, etc you can add these as fields to the schema and add the corresponding `data-typesense-field` to your markup. You'll find the list of data types supported [here](https://typesense.org/docs/0.15.0/api/#create-collection).
+
+⚠️ This plugin expects these two fields to be present in the schema:
+
+- `page_path` - this is automatically set by the plugin based on the directory structure of `publicDir`
+- `page_priority_score` - this is set to `10` by default for all pages, but you can override this value for any page like this: `<div data-typesense-field="page_priority_score" style="display: none;">5</div>`
+
+##### `server`
+Configuration details of your Typesense Cluster. 
+
+This config object is passed straight to the [typesense-js](https://github.com/typesense/typesense-js) client. So any option you'd use to configure the JS client can be used here.
+
+### Step 2: Markup your content
+
+Add a data attribute in this format to any HTML elements that contain the data you want to be indexed for that page:
+
+```html
+<... data-typesense-field="field_name_defined_in_schema">Content to be indexed</...>
 ```
 
-4. Rename the plugin in the `package.json`
+When the plugin runs, it looks for this data attribute and will add a field with the following format to the document:
 
-When you clone the site, the information in the `package.json` will need to be updated. Name your plugin based off of [Gatsby's conventions for naming plugins](https://www.gatsbyjs.com/docs/naming-a-plugin/).
-
-## 🧐 What's inside?
-
-This starter generates the [files Gatsby looks for in plugins](https://www.gatsbyjs.com/docs/files-gatsby-looks-for-in-a-plugin/).
-
-```text
-/my-plugin
-├── .gitignore
-├── gatsby-browser.js
-├── gatsby-node.js
-├── gatsby-ssr.js
-├── index.js
-├── LICENSE
-├── package.json
-└── README.md
+```json
+{
+  ...,
+  "field_name_defined_in_schema": "Content to be indexed"
+  ...,
+}
 ```
 
-- **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
-- **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.com/docs/browser-apis/) (if any). These allow customization/extension of default Gatsby settings affecting the browser.
-- **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.com/docs/node-apis/) (if any). These allow customization/extension of default Gatsby settings affecting pieces of the site build process.
-- **`gatsby-ssr.js`**: This file is where Gatsby expects to find any usage of the [Gatsby server-side rendering APIs](https://www.gatsbyjs.com/docs/ssr-apis/) (if any). These allow customization of default Gatsby settings affecting server-side rendering.
-- **`index.js`**: A file that will be loaded by default when the plugin is [required by another application](https://docs.npmjs.com/creating-node-js-modules#create-the-file-that-will-be-loaded-when-your-module-is-required-by-another-application0). You can adjust what file is used by updating the `main` field of the `package.json`.
-- **`LICENSE`**: This plugin starter is licensed under the 0BSD license. This means that you can see this file as a placeholder and replace it with your own license.
-- **`package.json`**: A manifest file for Node.js projects, which includes things like metadata (the plugin's name, author, etc). This manifest is how npm knows which packages to install for your project.
-- **`README.md`**: A text file containing useful reference information about your plugin.
+### Step 3: Build your site
 
-## 🎓 Learning Gatsby
+This plugin runs automatically post-build. So you want to run:
 
-If you're looking for more guidance on plugins, how they work, or what their role is in the Gatsby ecosystem, check out some of these resources:
+```bash
+gatsby build
+```
 
-- The [Creating Plugins](https://www.gatsbyjs.com/docs/creating-plugins/) section of the docs has information on authoring and maintaining plugins yourself.
-- The conceptual guide on [Plugins, Themes, and Starters](https://www.gatsbyjs.com/docs/plugins-themes-and-starters/) compares and contrasts plugins with other pieces of the Gatsby ecosystem. It can also help you [decide what to choose between a plugin, starter, or theme](https://www.gatsbyjs.com/docs/plugins-themes-and-starters/#deciding-which-to-use).
-- The [Gatsby plugin library](https://www.gatsbyjs.com/plugins/) has over 1750 official as well as community developed plugins that can get you up and running faster and borrow ideas from.
+This will index your content to Typesense.
+
+## How to build a Search UI
+
+The good folks over at Algolia have built and open-sourced [Instantsearch.js](https://github.com/algolia/instantsearch.js) which is a powerful collection of out-of-the-box components that you can use to compose interactive search experiences quickly.
+
+Typesense has an integration with InstantSearch.js (and its [React](https://github.com/algolia/react-instantsearch), [Vue](https://github.com/algolia/vue-instantsearch) and [Angular](https://github.com/algolia/angular-instantsearch) cousins), that lets you use a Typesense Server with InstantSearch.js. Read more on how to use the adapter [here](https://github.com/typesense/typesense-instantsearch-adapter).
+
+If you haven't used Instantsearch before, we recommend going through their Getting Started guide [here](https://www.algolia.com/doc/guides/building-search-ui/getting-started/js/#build-a-simple-ui). 
+
+Once you go through the guide, follow the instructions in the Typesense Adapter repo [here](https://github.com/typesense/typesense-instantsearch-adapter#quick-start) to use Typesense with InstantSearch. 
+
+## Local Development Workflow
+
+This section **only** applies if you're developing the plugin itself. 
+
+```bash
+
+# Start a local typesense server (uses Docker)
+npm run typesenseServer
+
+# Build the gatsby project under ./test/support/testground, which will also trigger this plugin
+npm run testground:build
+
+```
+
+### Running tests
+
+```bash
+npm test
+```
+
+## How to contribute
+
+If you find any issues, have questions or have a feature suggestion please open an issue on Github: http://github.com/typesense/gatsby-plugin-typesense/issues
+
+---
+&copy; 2016-2020 Typesense Inc.
