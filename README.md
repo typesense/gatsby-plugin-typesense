@@ -1,4 +1,4 @@
-# gatsby-plugin-typesense
+# gatsby-plugin-typesense [![NPM version][npm-image]][npm-url] [![CircleCI](https://circleci.com/gh/typesense/gatsby-plugin-typesense.svg?style=shield)](https://circleci.com/gh/typesense/gatsby-plugin-typesense)
 
 Plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www.gatsbyjs.com/)-powered sites using [Typesense](http://typesense.org/). 
 

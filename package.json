@@ -2,6 +2,17 @@
   "name": "gatsby-plugin-typesense",
   "version": "0.0.1",
   "description": "A gatsby plugin to index site content to Typesense",
+  "homepage": "https://github.com/typesense/gatsby-plugin-typesense",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/typesense/gatsby-plugin-typesense"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Typesense, Inc.",
+    "email": "contact@typesense.org",
+    "url": "https://typesense.org"
+  },
   "main": "index.js",
   "engines": {
     "node": ">=0.11.0"
