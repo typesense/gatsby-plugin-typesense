@@ -9,6 +9,10 @@ export default function About() {
       <div data-typesense-field={"description"}>
         This is some about us content
       </div>
+      <div>
+        <span data-typesense-field={"tags"}>about</span>
+        <span data-typesense-field={"tags"}>misc</span>
+      </div>
       <Footer />
     </div>
   )

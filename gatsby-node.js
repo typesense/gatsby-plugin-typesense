@@ -9,7 +9,7 @@ async function indexContentInTypesense({
   fileContents,
   wwwPath,
   typesense,
-  newCollectionName,
+  newCollectionSchema,
   reporter,
 }) {
   const $ = cheerio.load(fileContents)
@@ -18,7 +18,22 @@ async function indexContentInTypesense({
   $(`[${TYPESENSE_ATTRIBUTE_NAME}]`).each((index, element) => {
     const attributeName = $(element).attr(TYPESENSE_ATTRIBUTE_NAME)
     const attributeValue = $(element).text()
-    typesenseDocument[attributeName] = attributeValue
+    const fieldDefinition = newCollectionSchema.fields.find(
+      f => f.name === attributeName
+    )
+
+    if (!fieldDefinition) {
+      const errorMsg = `[Typesense] Field "${attributeName}" is not defined in the collection schema`
+      reporter.panic(errorMsg)
+      return Promise.error(errorMsg)
+    }
+
+    if (fieldDefinition.type.includes("[]")) {
+      typesenseDocument[attributeName] = typesenseDocument[attributeName] || []
+      typesenseDocument[attributeName].push(attributeValue)
+    } else {
+      typesenseDocument[attributeName] = attributeValue
+    }
   })
 
   if (utils.isObjectEmpty(typesenseDocument)) {
@@ -42,7 +57,7 @@ async function indexContentInTypesense({
     )
 
     await typesense
-      .collections(newCollectionName)
+      .collections(newCollectionSchema.name)
       .documents()
       .create(typesenseDocument)
 
@@ -87,7 +102,7 @@ exports.onPostBuild = async (
       fileContents,
       wwwPath,
       typesense,
-      newCollectionName,
+      newCollectionSchema,
       reporter,
     })
   }

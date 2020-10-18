@@ -33,6 +33,10 @@ Here's an example: if you have the following HTML snippet in a file:
 <p data-typesense-field="description">
   Hello, we are Stark Industries.
 </p>
+<div>
+  <span data-typesense-field="tags">about</span>
+  <span data-typesense-field="tags">misc</span>
+</div>
 
 ...
 
@@ -44,6 +48,7 @@ When you build your site, this plugin will index this page as the following stru
 {
   "title": "About Us",
   "description": "Hello, we are Stark Industries.",
+  "tags": ["about", "misc"],
   "page_path": "/about/",
   "page_priority_score": 10
 }
@@ -78,6 +83,12 @@ module.exports = {
               type: "string",
             },
             {
+              name: "tags",
+              type: "string[]",
+              optional: true,
+              facet: true,
+            },
+            {
               name: "page_path", // Required
               type: "string",
             },
@@ -86,7 +97,7 @@ module.exports = {
               type: "int32",
             },
           ],
-          default_sorting_field: "page_priority_score",  // Required
+          default_sorting_field: "page_priority_score", // Required
         },
         server: { // Required
           apiKey: "xyz",
@@ -148,6 +159,27 @@ When the plugin runs, it looks for this data attribute and will add a field with
 }
 ```
 
+If you have an array data type defined in the schema (useful when you need to index multiple sections on the same page to the same field), you can add the same `data-typesense-field="X"` attribute to multiple elements. 
+
+For example: let's say you have a `string[]` field called `array_field_defined_in_schema` in your schema.
+
+If you have the following in your markup:
+
+```html
+<p data-typesense-field="array_field_defined_in_schema">Content 1</p>
+<p data-typesense-field="array_field_defined_in_schema">Content 2</p>
+```
+
+When the plugin runs, it looks for this data attribute and will add a field with the following format to the document:
+
+```
+{
+  ...,
+  "field_name_defined_in_schema": ["Content 1", "Content 2"],
+  ...,
+}
+```
+
 ### 3️⃣ Build your site
 
 This plugin runs automatically post-build. So you want to run:
@@ -156,7 +188,7 @@ This plugin runs automatically post-build. So you want to run:
 gatsby build
 ```
 
-This will index your content to Typesense.
+This will index your content to your Typesense search cluster.
 
 ## 🔍 How to build a Search UI
 

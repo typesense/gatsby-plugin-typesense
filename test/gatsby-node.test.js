@@ -17,6 +17,12 @@ describe("gatsby-node.js", () => {
         type: "string",
       },
       {
+        name: "tags",
+        type: "string[]",
+        optional: true,
+        facet: true,
+      },
+      {
         name: "page_path",
         type: "string",
       },
@@ -104,6 +110,7 @@ describe("gatsby-node.js", () => {
         {
           title: "About",
           description: "This is some about us content",
+          tags: ["about", "misc"],
           page_path: "/about/",
           page_priority_score: 10,
         },

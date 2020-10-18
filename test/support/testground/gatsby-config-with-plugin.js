@@ -5,13 +5,13 @@
  */
 
 module.exports = {
-  /* Your site config here */
   plugins: [
     {
       resolve: `gatsby-plugin-typesense`,
       options: {
-        publicDir: `${__dirname}/public`,
+        publicDir: `${__dirname}/public`, // Required
         collectionSchema: {
+          // Required
           name: "pages_v1",
           fields: [
             {
@@ -21,6 +21,12 @@ module.exports = {
             {
               name: "description",
               type: "string",
+            },
+            {
+              name: "tags",
+              type: "string[]",
+              optional: true,
+              facet: true,
             },
             {
               name: "page_path", // Required
@@ -34,6 +40,7 @@ module.exports = {
           default_sorting_field: "page_priority_score", // Required
         },
         server: {
+          // Required
           apiKey: "xyz",
           nodes: [
             {
