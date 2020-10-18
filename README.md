@@ -60,7 +60,20 @@ npm install @babel/runtime
 
 ## 🛠️ How to use
 
-### 1️⃣ Configure the plugin
+### 1️⃣ Start a Typesense server
+
+The simplest way to run a Typesense server is using Docker:
+
+```
+mkdir /tmp/typesense-server-data
+docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.15.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors
+```
+
+You can also download native binaries [here](https://typesense.org/downloads/).
+
+If you'd prefer a hosted version of Typesense, you can also spin up a cluster on [Typesense Cloud](https://cloud.typesense.org/). 
+
+### 2️⃣ Configure the plugin
 
 ```javascript
 // gatsby-config.js
@@ -141,7 +154,7 @@ Configuration details of your Typesense Cluster.
 
 This config object is passed straight to the [typesense-js](https://github.com/typesense/typesense-js) client. So any option you'd use to configure the JS client can be used here.
 
-### 2️⃣ Markup your content
+### 3️⃣ Markup your content
 
 Add a data attribute in this format to any HTML elements that contain the data you want to be indexed for that page:
 
@@ -166,8 +179,8 @@ For example: let's say you have a `string[]` field called `array_field_defined_i
 If you have the following in your markup:
 
 ```html
-<p data-typesense-field="array_field_defined_in_schema">Content 1</p>
-<p data-typesense-field="array_field_defined_in_schema">Content 2</p>
+<p data-typesense-field="array_field_defined_in_schema">Para 1</p>
+<p data-typesense-field="array_field_defined_in_schema">Para 2</p>
 ```
 
 When the plugin runs, it looks for this data attribute and will add a field with the following format to the document:
@@ -175,12 +188,12 @@ When the plugin runs, it looks for this data attribute and will add a field with
 ```
 {
   ...,
-  "array_field_defined_in_schema": ["Content 1", "Content 2"],
+  "array_field_defined_in_schema": ["Para 1", "Para 2"],
   ...,
 }
 ```
 
-### 3️⃣ Build your site
+### 4️⃣ Build your site
 
 This plugin runs automatically post-build. So you want to run:
 
@@ -195,8 +208,6 @@ This will index your content to your Typesense search cluster.
 The good folks over at Algolia have built and open-sourced [Instantsearch.js](https://github.com/algolia/instantsearch.js) which is a powerful collection of out-of-the-box UI components that you can use to compose interactive search experiences quickly.
 
 Typesense has an integration with InstantSearch.js (and its [React](https://github.com/algolia/react-instantsearch), [Vue](https://github.com/algolia/vue-instantsearch) and [Angular](https://github.com/algolia/angular-instantsearch) cousins), that lets you use a Typesense cluster with InstantSearch.js. 
-
-Read more on how to use the adapter and build search interfaces [here](https://github.com/typesense/typesense-instantsearch-adapter).
 
 Here's a quick minimal example of a search interface using react-instantsearch:
 
@@ -219,7 +230,7 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
   //  So you can pass any parameters supported by the search endpoint below.
   //  queryBy is required.
   additionalSearchParameters: {
-    queryBy: "title,description",
+    queryBy: "title,description,tags",
   },
 })
 const searchClient = typesenseInstantsearchAdapter.searchClient
@@ -240,6 +251,8 @@ export default function SearchInterface() {
   )
 }
 ```
+
+Read more on how to use the adapter and build search interfaces [here](https://github.com/typesense/typesense-instantsearch-adapter#quick-start).
 
 ## 🏗️ Local Development Workflow
 
