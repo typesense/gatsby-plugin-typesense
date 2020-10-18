@@ -33,8 +33,6 @@
     "typesense",
     "search"
   ],
-  "author": "Jason Bosco <jason@typesense.org>",
-  "license": "Apache-2.0",
   "devDependencies": {
     "@babel/runtime": "^7.10.2",
     "axios-mock-adapter": "^1.18.2",
