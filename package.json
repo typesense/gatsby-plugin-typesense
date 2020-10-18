@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-typesense",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A gatsby plugin to index site content to Typesense",
   "homepage": "https://github.com/typesense/gatsby-plugin-typesense",
   "repository": {
