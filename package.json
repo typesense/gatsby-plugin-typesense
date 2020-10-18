@@ -23,11 +23,11 @@
   "devDependencies": {
     "@babel/runtime": "^7.10.2",
     "axios-mock-adapter": "^1.18.2",
-    "jest": "^26.5.3"
+    "jest": "^26.5.3",
+    "prettier": "^2.1.2"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
-    "prettier": "^2.1.2",
     "typesense": "^0.7.1"
   },
   "peerDependencies": {

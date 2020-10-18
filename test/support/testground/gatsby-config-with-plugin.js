@@ -23,15 +23,15 @@ module.exports = {
               type: "string",
             },
             {
-              name: "page_path",
+              name: "page_path", // Required
               type: "string",
             },
             {
-              name: "page_priority_score",
+              name: "page_priority_score", // Required
               type: "int32",
             },
           ],
-          default_sorting_field: "page_priority_score",
+          default_sorting_field: "page_priority_score", // Required
         },
         server: {
           apiKey: "xyz",
