@@ -246,3 +246,6 @@ If you find any issues, have questions or have a feature suggestion please open 
 
 ---
 &copy; 2016-2020 Typesense Inc.
+
+[npm-image]: https://badge.fury.io/js/gatsby-plugin-typesense.svg
+[npm-url]: https://npmjs.org/package/gatsby-plugin-typesense
