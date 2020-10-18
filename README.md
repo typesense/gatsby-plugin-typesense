@@ -6,7 +6,7 @@ This plugin runs post-build and indexes content from your site to Typesense. The
 
 If you're new to Typesense, get a quick overview from [this guide](https://typesense.org/guide/).
 
-## How to install
+## ⌨️ How to install
 
 ```bash
 npm install gatsby-plugin-typesense
@@ -18,7 +18,7 @@ Also install peer dependencies:
 npm install @babel/runtime
 ```
 
-## How it works
+## ✨ How it works
 
 On post build, this plugin scans Gatsby's public directory looking for HTML files. Within each HTML file, it looks for HTML elements that have a data attribute called `data-typesense-field` and creates a Typesense `Document` with the value of that data attribute as the key, and the text content of that HTML element as the value. 
 
@@ -53,9 +53,9 @@ You'll then be able to query this collection of documents (pages) from Typesense
 
 You can also add any arbitrary fields to the document, by adding the `data-typesense-field` data attribute to any HTML element.
 
-## How to use
+## 🛠️ How to use
 
-### Step 1: Configure the plugin
+### 1️⃣ Configure the plugin
 
 ```javascript
 // gatsby-config.js
@@ -130,7 +130,7 @@ Configuration details of your Typesense Cluster.
 
 This config object is passed straight to the [typesense-js](https://github.com/typesense/typesense-js) client. So any option you'd use to configure the JS client can be used here.
 
-### Step 2: Markup your content
+### 2️⃣ Markup your content
 
 Add a data attribute in this format to any HTML elements that contain the data you want to be indexed for that page:
 
@@ -148,7 +148,7 @@ When the plugin runs, it looks for this data attribute and will add a field with
 }
 ```
 
-### Step 3: Build your site
+### 3️⃣ Build your site
 
 This plugin runs automatically post-build. So you want to run:
 
@@ -158,7 +158,7 @@ gatsby build
 
 This will index your content to Typesense.
 
-## How to build a Search UI
+## 🔍 How to build a Search UI
 
 The good folks over at Algolia have built and open-sourced [Instantsearch.js](https://github.com/algolia/instantsearch.js) which is a powerful collection of out-of-the-box UI components that you can use to compose interactive search experiences quickly.
 
@@ -209,7 +209,7 @@ export default function SearchInterface() {
 }
 ```
 
-## Local Development Workflow
+## 🏗️ Local Development Workflow
 
 This section **only** applies if you're developing the plugin itself. 
 
@@ -240,7 +240,7 @@ np
 # Follow instructions that np shows you
 ```
 
-## How to contribute
+## 🤗 How to contribute
 
 If you find any issues, have questions or have a feature suggestion please open an issue on Github: http://github.com/typesense/gatsby-plugin-typesense/issues
 
