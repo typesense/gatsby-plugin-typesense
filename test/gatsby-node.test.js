@@ -1,10 +1,8 @@
 const axios = require("axios")
 const MockAxiosAdapter = require("axios-mock-adapter")
-const rewire = require("rewire")
-
-const gatsbyNode = rewire("../gatsby-node")
 
 describe("gatsby-node.js", () => {
+  let gatsbyNode
   let mockAxios
 
   const COLLECTION_SCHEMA = {
@@ -44,8 +42,8 @@ describe("gatsby-node.js", () => {
   const NEW_COLLECTION_NAME = `pages_v1_${Date.now()}`
 
   const REPORTER = {
-    info: jest.fn(/*msg => console.info(msg)*/),
-    verbose: jest.fn(/*msg => console.log(msg)*/),
+    info: jest.fn(msg => console.info(msg)),
+    verbose: jest.fn(msg => console.log(msg)),
     panic: jest.fn(msg => {
       throw msg
     }),
@@ -58,26 +56,26 @@ describe("gatsby-node.js", () => {
   }
 
   beforeEach(() => {
-    const mockUtils = require("../lib/utils")
-    mockUtils.generateNewCollectionName = jest.fn(() => NEW_COLLECTION_NAME)
-    gatsbyNode.__set__("utils", mockUtils)
-
+    gatsbyNode = require("../gatsby-node")
     mockAxios = new MockAxiosAdapter(axios)
+  })
+
+  test("onPostBuild", async () => {
     mockAxios
-      .onPost("http://localhost:8108/collections", undefined, {
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-        "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
-      })
+      .onPost(
+        "http://localhost:8108/collections",
+        expect.objectContaining({
+          fields: COLLECTION_SCHEMA.fields,
+        }),
+        {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+          "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
+        }
+      )
       .reply(config => {
         // console.log(config)
-        if (
-          JSON.stringify(JSON.parse(config.data).fields) ===
-            JSON.stringify(COLLECTION_SCHEMA.fields) &&
-          JSON.parse(config.data).name === NEW_COLLECTION_NAME
-        ) {
-          return [201, "{}", { "content-type": "application/json" }]
-        }
+        return [201, "{}", { "content-type": "application/json" }]
       })
 
     mockAxios
@@ -131,21 +129,27 @@ describe("gatsby-node.js", () => {
       })
 
     mockAxios
-      .onPut("http://localhost:8108/aliases/pages_v1", undefined, {
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-        "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
+      .onPut(
+        "http://localhost:8108/aliases/pages_v1",
+        expect.objectContaining({
+          collection_name: NEW_COLLECTION_NAME,
+        }),
+        {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+          "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
+        }
+      )
+      .reply(config => {
+        // console.log(config)
+        return [201, "{}", { "content-type": "application/json" }]
       })
-      .reply(201, "{}", { "content-type": "application/json; charset=utf-8" })
-  })
 
-  test("onPostBuild", async () => {
-    // We're essentially checking if the expected API calls have been mocked
-    // If a mock is missing, an error will be raised and the test will fail
     const pluginOptions = {
       publicDir: `${__dirname}/support/testground/public`,
       collectionSchema: COLLECTION_SCHEMA,
       server: SERVER_CONFIG,
+      generateNewCollectionName: jest.fn(() => NEW_COLLECTION_NAME),
     }
 
     await gatsbyNode.onPostBuild({ reporter: REPORTER }, pluginOptions)

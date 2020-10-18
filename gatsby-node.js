@@ -55,13 +55,18 @@ async function indexContentInTypesense({
 
 exports.onPostBuild = async (
   { reporter },
-  { server, collectionSchema, publicDir }
+  {
+    server,
+    collectionSchema,
+    publicDir,
+    generateNewCollectionName = utils.generateNewCollectionName,
+  }
 ) => {
   reporter.verbose("[Typesense] Getting list of HTML files")
   const htmlFiles = await utils.getHTMLFilesRecursively(publicDir)
 
   const typesense = new TypesenseClient(server)
-  const newCollectionName = utils.generateNewCollectionName(collectionSchema)
+  const newCollectionName = generateNewCollectionName(collectionSchema)
   const newCollectionSchema = { ...collectionSchema }
   newCollectionSchema.name = newCollectionName
 

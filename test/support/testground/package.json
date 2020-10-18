@@ -11,7 +11,8 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "config:disablePlugins": "rm -f gatsby-config.js",
+    "config:enablePlugins": "ln -sf gatsby-config-with-plugin.js gatsby-config.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",
