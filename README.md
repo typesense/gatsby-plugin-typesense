@@ -1,12 +1,10 @@
 # gatsby-plugin-typesense
 
-## Description
-
 Plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www.gatsbyjs.com/)-powered sites using [Typesense](http://typesense.org/). 
 
-This plugin runs post-build and indexes the content you specify to Typesense. The search UI is then built with the [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter) library.
+This plugin runs post-build and indexes content from your site to Typesense. The search UI is then built with the [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter) library.
 
-Get a quick overview of Typesense in [this guide](https://typesense.org/guide/).
+If you're new to Typesense, get a quick overview from [this guide](https://typesense.org/guide/).
 
 ## How to install
 
@@ -51,7 +49,7 @@ When you build your site, this plugin will index this page as the following stru
 }
 ```
 
-You'll then be able to query this collection of documents (pages) from Typesense, via your [Search UI components](https://github.com/typesense/typesense-instantsearch-adapter).
+You'll then be able to query this collection of documents (pages) from Typesense, via your Search UI components from [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter).
 
 You can also add any arbitrary fields to the document, by adding the `data-typesense-field` data attribute to any HTML element.
 
@@ -142,10 +140,10 @@ Add a data attribute in this format to any HTML elements that contain the data y
 
 When the plugin runs, it looks for this data attribute and will add a field with the following format to the document:
 
-```json
+```
 {
   ...,
-  "field_name_defined_in_schema": "Content to be indexed"
+  "field_name_defined_in_schema": "Content to be indexed",
   ...,
 }
 ```
@@ -162,13 +160,54 @@ This will index your content to Typesense.
 
 ## How to build a Search UI
 
-The good folks over at Algolia have built and open-sourced [Instantsearch.js](https://github.com/algolia/instantsearch.js) which is a powerful collection of out-of-the-box components that you can use to compose interactive search experiences quickly.
+The good folks over at Algolia have built and open-sourced [Instantsearch.js](https://github.com/algolia/instantsearch.js) which is a powerful collection of out-of-the-box UI components that you can use to compose interactive search experiences quickly.
 
-Typesense has an integration with InstantSearch.js (and its [React](https://github.com/algolia/react-instantsearch), [Vue](https://github.com/algolia/vue-instantsearch) and [Angular](https://github.com/algolia/angular-instantsearch) cousins), that lets you use a Typesense Server with InstantSearch.js. Read more on how to use the adapter [here](https://github.com/typesense/typesense-instantsearch-adapter).
+Typesense has an integration with InstantSearch.js (and its [React](https://github.com/algolia/react-instantsearch), [Vue](https://github.com/algolia/vue-instantsearch) and [Angular](https://github.com/algolia/angular-instantsearch) cousins), that lets you use a Typesense cluster with InstantSearch.js. 
 
-If you haven't used Instantsearch before, we recommend going through their Getting Started guide [here](https://www.algolia.com/doc/guides/building-search-ui/getting-started/js/#build-a-simple-ui). 
+Read more on how to use the adapter and build search interfaces [here](https://github.com/typesense/typesense-instantsearch-adapter).
 
-Once you go through the guide, follow the instructions in the Typesense Adapter repo [here](https://github.com/typesense/typesense-instantsearch-adapter#quick-start) to use Typesense with InstantSearch. 
+Here's a quick minimal example of a search interface using react-instantsearch:
+
+```jsx
+import { InstantSearch, SearchBox, Hits, Stats } from "react-instantsearch-dom"
+import TypesenseInstantSearchAdapter from "typesense-instantsearch-adapter"
+
+const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
+  server: {
+    apiKey: "xyz", // Be sure to use the search-only-api-key
+    nodes: [
+      {
+        host: "localhost",
+        port: "8108",
+        protocol: "http",
+      },
+    ],
+  },
+  // The following parameters are directly passed to Typesense's search API endpoint.
+  //  So you can pass any parameters supported by the search endpoint below.
+  //  queryBy is required.
+  additionalSearchParameters: {
+    queryBy: "title,description",
+  },
+})
+const searchClient = typesenseInstantsearchAdapter.searchClient
+
+export default function SearchInterface() {
+  const Hit = ({ hit }) => (
+    <p>
+      {hit.title} - {hit.description}
+    </p>
+  )
+
+  return (
+      <InstantSearch searchClient={searchClient} indexName="pages_v1">
+        <SearchBox />
+        <Stats />
+        <Hits hitComponent={Hit} />
+      </InstantSearch>
+  )
+}
+```
 
 ## Local Development Workflow
 
