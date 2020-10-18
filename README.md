@@ -229,6 +229,17 @@ npm run testground:build
 npm test
 ```
 
+### Releasing a new version
+
+To release a new version, we use the np package:
+
+```bash
+npm install --global np
+np 
+
+# Follow instructions that np shows you
+```
+
 ## How to contribute
 
 If you find any issues, have questions or have a feature suggestion please open an issue on Github: http://github.com/typesense/gatsby-plugin-typesense/issues
