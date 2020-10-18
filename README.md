@@ -6,18 +6,6 @@ This plugin runs post-build and indexes content from your site to Typesense. The
 
 If you're new to Typesense, get a quick overview from [this guide](https://typesense.org/guide/).
 
-## ⌨️ How to install
-
-```bash
-npm install gatsby-plugin-typesense
-```
-
-Also install peer dependencies:
-
-```bash
-npm install @babel/runtime
-```
-
 ## ✨ How it works
 
 On post build, this plugin scans Gatsby's public directory looking for HTML files. Within each HTML file, it looks for HTML elements that have a data attribute called `data-typesense-field` and creates a Typesense `Document` with the value of that data attribute as the key, and the text content of that HTML element as the value. 
@@ -57,6 +45,18 @@ When you build your site, this plugin will index this page as the following stru
 You'll then be able to query this collection of documents (pages) from Typesense, via your Search UI components from [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter).
 
 You can also add any arbitrary fields to the document, by adding the `data-typesense-field` data attribute to any HTML element.
+
+## ⌨️ How to install
+
+```bash
+npm install gatsby-plugin-typesense
+```
+
+Also install peer dependencies:
+
+```bash
+npm install @babel/runtime
+```
 
 ## 🛠️ How to use
 
