@@ -175,7 +175,7 @@ When the plugin runs, it looks for this data attribute and will add a field with
 ```
 {
   ...,
-  "field_name_defined_in_schema": ["Content 1", "Content 2"],
+  "array_field_defined_in_schema": ["Content 1", "Content 2"],
   ...,
 }
 ```
