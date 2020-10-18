@@ -1,0 +1,22 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.1.0
+jobs:
+  test:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - node/install:
+          install-npm: true
+          node-install-dir: ~/node
+      - node/install-packages
+      - run:
+          command: npm install -g gatsby-cli
+      - run:
+          command: npm test
+
+workflows:
+  node_tests:
+    jobs:
+      - test
