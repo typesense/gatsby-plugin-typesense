@@ -4,7 +4,9 @@ Plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www
 
 This plugin runs post-build and indexes content from your site to Typesense. The search UI is then built with the [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter) library.
 
-If you're new to Typesense, get a quick overview from [this guide](https://typesense.org/guide/).
+#### What is Typesense? 
+
+If you're new to Typesense, it is an **open source** search engine that is simple to use, run and scale, with clean APIs and documentation. Think of it as an open source alternative to Algolia and an easier-to-use, batteries-included alternative to ElasticSearch. Get a quick overview from [this guide](https://typesense.org/guide/).
 
 ## ✨ How it works
 
