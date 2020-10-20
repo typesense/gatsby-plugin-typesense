@@ -130,7 +130,7 @@ module.exports = {
 }
 ```
 
-Here's what the options mean:
+#### Here's what the options mean:
 
 ##### `publicDir`
 
