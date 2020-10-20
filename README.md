@@ -1,8 +1,10 @@
 # gatsby-plugin-typesense [![NPM version][npm-image]][npm-url] [![CircleCI](https://circleci.com/gh/typesense/gatsby-plugin-typesense.svg?style=shield)](https://circleci.com/gh/typesense/gatsby-plugin-typesense)
 
-Plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www.gatsbyjs.com/)-powered sites using [Typesense](http://typesense.org/). 
+A Gatsby plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www.gatsbyjs.com/)-powered sites using [Typesense](http://typesense.org/). 
 
 This plugin runs post-build and indexes content from your site to Typesense. The search UI is then built with the [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter) library.
+
+This plugin works for both static and dynamic Gatsby sites. It does not depend on you using Markdown, Frontmatter, or any particular Gatsby plugin. It does not even depend on React. So you can use it with really any type of Gatsby site. 
 
 #### What is Typesense? 
 
