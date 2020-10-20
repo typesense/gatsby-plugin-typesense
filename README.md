@@ -209,9 +209,15 @@ This will index your content to your Typesense search cluster.
 
 The good folks over at Algolia have built and open-sourced [Instantsearch.js](https://github.com/algolia/instantsearch.js) which is a powerful collection of out-of-the-box UI components that you can use to compose interactive search experiences quickly.
 
-Typesense has an integration with InstantSearch.js (and its [React](https://github.com/algolia/react-instantsearch), [Vue](https://github.com/algolia/vue-instantsearch) and [Angular](https://github.com/algolia/angular-instantsearch) cousins), that lets you use a Typesense cluster with InstantSearch.js. 
+Typesense has an integration with InstantSearch.js (and its [React cousin](https://github.com/algolia/react-instantsearch)), that lets you use a Typesense cluster with InstantSearch.js. 
 
-Here's a quick minimal example of a search interface using react-instantsearch:
+Install InstantSearch and the Typesense Adapter in your Gatsby project:
+
+```bash
+npm install typesense-instantsearch-adapter react-instantsearch-dom @babel/runtime
+```
+
+Here's a quick minimal example of a search interface:
 
 ```jsx
 import { InstantSearch, SearchBox, Hits, Stats } from "react-instantsearch-dom"
@@ -254,7 +260,9 @@ export default function SearchInterface() {
 }
 ```
 
-Read more on how to use the adapter and build search interfaces [here](https://github.com/typesense/typesense-instantsearch-adapter#quick-start).
+InstantSearch.js supports a variety of additional [search widgets](https://www.algolia.com/doc/guides/building-search-ui/widgets/showcase/react/). Read more about how to use them in their documentation [here](https://www.algolia.com/doc/guides/building-search-ui/getting-started/react/).
+
+Read more on how to use the Typesense adapter [here](https://github.com/typesense/typesense-instantsearch-adapter#quick-start).
 
 ## 🏗️ Local Development Workflow
 
