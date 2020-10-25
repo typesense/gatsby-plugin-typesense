@@ -68,19 +68,14 @@ describe("gatsby-node.js", () => {
 
   test("onPostBuild", async () => {
     mockAxios
-      .onPost(
-        "http://localhost:8108/collections",
-        expect.objectContaining({
-          fields: COLLECTION_SCHEMA.fields,
-        }),
-        {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-          "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
-        }
-      )
+      .onPost("http://localhost:8108/collections", undefined, {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
+      })
       .reply(config => {
         // console.log(config)
+        expect(JSON.parse(config.data).fields).toEqual(COLLECTION_SCHEMA.fields)
         return [201, "{}", { "content-type": "application/json" }]
       })
 
@@ -136,19 +131,16 @@ describe("gatsby-node.js", () => {
       })
 
     mockAxios
-      .onPut(
-        "http://localhost:8108/aliases/pages_v1",
-        expect.objectContaining({
-          collection_name: NEW_COLLECTION_NAME,
-        }),
-        {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-          "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
-        }
-      )
+      .onPut("http://localhost:8108/aliases/pages_v1", undefined, {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
+      })
       .reply(config => {
         // console.log(config)
+        expect(JSON.parse(config.data).collection_name).toEqual(
+          NEW_COLLECTION_NAME
+        )
         return [201, "{}", { "content-type": "application/json" }]
       })
 

@@ -68,7 +68,7 @@ The simplest way to run a Typesense server is using Docker:
 
 ```
 mkdir /tmp/typesense-server-data
-docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.15.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors
+docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.16.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors
 ```
 
 You can also download native binaries [here](https://typesense.org/downloads/).
@@ -144,7 +144,7 @@ The schema that will be used to create the collection in Typesense.
 
 A quick recap of Typesense terminology, if you haven't already read [the guide](https://typesense.org/guide/): A `Collection` contains many `Documents`. You create a `Collection` with a specific schema and then all `Documents` that are added to that `Collection` will be validated against that schema. You issue search queries against a `Collection` of `Documents`.
 
-While the schema in the example above is a great starting point, you can choose to customize the schema to your needs. For eg: when you need to index more structured data from your pages like price, category, tags, etc you can add these as fields to the schema and add the corresponding `data-typesense-field` to your markup. You'll find the list of data types supported [here](https://typesense.org/docs/0.15.0/api/#create-collection).
+While the schema in the example above is a great starting point, you can choose to customize the schema to your needs. For eg: when you need to index more structured data from your pages like price, category, tags, etc you can add these as fields to the schema and add the corresponding `data-typesense-field` to your markup. You'll find the list of data types supported [here](https://typesense.org/docs/0.16.0/api/#create-collection).
 
 ⚠️ This plugin expects these two fields to be present in the schema:
 

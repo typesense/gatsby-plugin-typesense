@@ -24,7 +24,7 @@
   "scripts": {
     "testground:build": "npm link && cd test/support/testground && npm install && npm link gatsby-plugin-typesense && npm run config:enablePlugins && gatsby build",
     "testground:build:withoutPlugins": "npm link && cd test/support/testground && npm install && npm run config:disablePlugins && gatsby build && npm run config:enablePlugins",
-    "typesenseServer": "docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.15.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors",
+    "typesenseServer": "docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.16.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors",
     "test": "npm run testground:build:withoutPlugins && jest"
   },
   "keywords": [
@@ -36,12 +36,12 @@
   "devDependencies": {
     "@babel/runtime": "^7.10.2",
     "axios-mock-adapter": "^1.18.2",
-    "jest": "^26.5.3",
+    "jest": "^26.6.1",
     "prettier": "^2.1.2"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
-    "typesense": "^0.7.1"
+    "typesense": "^0.8.0"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.10.2"
