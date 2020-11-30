@@ -6,17 +6,17 @@ const TYPESENSE_ATTRIBUTE_NAME = "data-typesense-field"
 let utils = require("./lib/utils")
 
 function typesenseGetValue(fieldDefinition, attributeValue) {
-  if (fieldDefinition.type.includes('int')) {
+  if (fieldDefinition.type.includes("int")) {
     return parseInt(attributeValue);
   }
-  if (fieldDefinition.type.includes('float')) {
+  if (fieldDefinition.type.includes("float")) {
     return parseFloat(attributeValue);
   }
-  if (fieldDefinition.type.includes('bool')) {
-    if (attributeValue.toLowerCase() === 'false') {
+  if (fieldDefinition.type.includes("bool")) {
+    if (attributeValue.toLowerCase() === "false") {
       return false;
     }
-    if (attributeValue === '0') {
+    if (attributeValue === "0") {
       return false;
     }
     return attributeValue.trim() !== "";
