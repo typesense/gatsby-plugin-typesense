@@ -88,7 +88,7 @@ describe("gatsby-node.js", () => {
 
   test("onPostBuild", async () => {
     mockAxios
-      .onPost("http://localhost:8108/collections", undefined, {
+      .onGet("http://localhost:8108/collections", undefined, {
         Accept: "application/json, text/plain, */*",
         "Content-Type": "application/json",
         "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
