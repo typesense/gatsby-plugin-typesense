@@ -15,7 +15,7 @@ export default function About() {
       {/* An example of an int32 field */}
       <div data-typesense-field={"stock"}>4</div>
       {/* An example of a bool field */}
-      <div data-typesense-field={"available"}>true</div>
+      <div data-typesense-field={"published"}>true</div>
       <div>
         {/* An example of an string[] field */}
         <span data-typesense-field={"tags"}>about</span>
