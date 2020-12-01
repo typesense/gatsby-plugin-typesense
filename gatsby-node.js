@@ -5,7 +5,7 @@ const TYPESENSE_ATTRIBUTE_NAME = "data-typesense-field"
 
 let utils = require("./lib/utils")
 
-function typesenseGetValue(fieldDefinition, attributeValue) {
+function typeCastValue(fieldDefinition, attributeValue) {
   if (fieldDefinition.type.includes("int")) {
     return parseInt(attributeValue);
   }
@@ -49,9 +49,9 @@ async function indexContentInTypesense({
 
     if (fieldDefinition.type.includes("[]")) {
       typesenseDocument[attributeName] = typesenseDocument[attributeName] || []
-      typesenseDocument[attributeName].push(typesenseGetValue(fieldDefinition, attributeValue))
+      typesenseDocument[attributeName].push(typeCastValue(fieldDefinition, attributeValue))
     } else {
-      typesenseDocument[attributeName] = typesenseGetValue(fieldDefinition, attributeValue);
+      typesenseDocument[attributeName] = typeCastValue(fieldDefinition, attributeValue);
     }
   })
 
