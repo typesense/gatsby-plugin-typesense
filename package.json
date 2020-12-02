@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-typesense",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A gatsby plugin to push site content to a Typesense Search cluster",
   "homepage": "https://github.com/typesense/gatsby-plugin-typesense",
   "repository": {
