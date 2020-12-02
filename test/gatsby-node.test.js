@@ -63,6 +63,7 @@ describe("gatsby-node.js", () => {
         protocol: "http",
       },
     ],
+    logLevel: "debug", // Useful to know the last request that was made, especially when a mock is missing
   }
 
   const NEW_COLLECTION_NAME = `pages_v1_${Date.now()}`
@@ -88,7 +89,7 @@ describe("gatsby-node.js", () => {
 
   test("onPostBuild", async () => {
     mockAxios
-      .onGet("http://localhost:8108/collections", undefined, {
+      .onPost("http://localhost:8108/collections", undefined, {
         Accept: "application/json, text/plain, */*",
         "Content-Type": "application/json",
         "X-TYPESENSE-API-KEY": SERVER_CONFIG.apiKey,
@@ -126,6 +127,7 @@ describe("gatsby-node.js", () => {
           title: "About",
           description: "This is some about us content",
           stock: 4,
+          price: 9.99,
           published: true,
           tags: ["about", "misc"],
           score: [3, 5],
