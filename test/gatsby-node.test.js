@@ -17,6 +17,26 @@ describe("gatsby-node.js", () => {
         type: "string",
       },
       {
+        name: "stock",
+        type: "int32",
+        optional: true,
+      },
+      {
+        name: "published",
+        type: "bool",
+        optional: true,
+      },
+      {
+        name: "score",
+        type: "int32[]",
+        optional: true,
+      },
+      {
+        name: "price",
+        type: "float",
+        optional: true,
+      },
+      {
         name: "tags",
         type: "string[]",
         optional: true,
@@ -43,6 +63,7 @@ describe("gatsby-node.js", () => {
         protocol: "http",
       },
     ],
+    logLevel: "debug", // Useful to know the last request that was made, especially when a mock is missing
   }
 
   const NEW_COLLECTION_NAME = `pages_v1_${Date.now()}`
@@ -105,7 +126,11 @@ describe("gatsby-node.js", () => {
         {
           title: "About",
           description: "This is some about us content",
+          stock: 4,
+          price: 9.99,
+          published: true,
           tags: ["about", "misc"],
+          score: [3, 5],
           page_path: "/about/",
           page_priority_score: 10,
         },

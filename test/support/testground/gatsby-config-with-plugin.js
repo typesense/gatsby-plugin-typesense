@@ -23,6 +23,26 @@ module.exports = {
               type: "string",
             },
             {
+              name: "stock",
+              type: "int32",
+              optional: true,
+            },
+            {
+              name: "published",
+              type: "bool",
+              optional: true,
+            },
+            {
+              name: "score",
+              type: "int32[]",
+              optional: true,
+            },
+            {
+              name: "price",
+              type: "float",
+              optional: true,
+            },
+            {
               name: "tags",
               type: "string[]",
               optional: true,

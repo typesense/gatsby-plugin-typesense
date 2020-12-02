@@ -5,6 +5,25 @@ const TYPESENSE_ATTRIBUTE_NAME = "data-typesense-field"
 
 let utils = require("./lib/utils")
 
+function typeCastValue(fieldDefinition, attributeValue) {
+  if (fieldDefinition.type.includes("int")) {
+    return parseInt(attributeValue);
+  }
+  if (fieldDefinition.type.includes("float")) {
+    return parseFloat(attributeValue);
+  }
+  if (fieldDefinition.type.includes("bool")) {
+    if (attributeValue.toLowerCase() === "false") {
+      return false;
+    }
+    if (attributeValue === "0") {
+      return false;
+    }
+    return attributeValue.trim() !== "";
+  }
+  return attributeValue;
+}
+
 async function indexContentInTypesense({
   fileContents,
   wwwPath,
@@ -30,9 +49,9 @@ async function indexContentInTypesense({
 
     if (fieldDefinition.type.includes("[]")) {
       typesenseDocument[attributeName] = typesenseDocument[attributeName] || []
-      typesenseDocument[attributeName].push(attributeValue)
+      typesenseDocument[attributeName].push(typeCastValue(fieldDefinition, attributeValue))
     } else {
-      typesenseDocument[attributeName] = attributeValue
+      typesenseDocument[attributeName] = typeCastValue(fieldDefinition, attributeValue);
     }
   })
 
