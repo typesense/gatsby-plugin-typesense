@@ -70,7 +70,7 @@ The simplest way to run a Typesense server is using Docker:
 
 ```
 mkdir /tmp/typesense-server-data
-docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.16.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors
+docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.19.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors
 ```
 
 You can also download native binaries [here](https://typesense.org/downloads/).
@@ -157,6 +157,43 @@ While the schema in the example above is a great starting point, you can choose 
 Configuration details of your Typesense Cluster. 
 
 This config object is passed straight to the [typesense-js](https://github.com/typesense/typesense-js) client. So any option you'd use to configure the JS client can be used here.
+
+#### Adding more than one collection
+
+To add more than one collection to Typesense (for example, if you have two search UIs, one for blog posts and another for authors... or if you have multilingual site and wish to separate the contents so that searching in one language would return only results from that collection), simply call `gatsby-plugin-typesense` multiple times:
+
+```jsx
+module.exports = {
+  plugins: [
+    {
+      resolve: `gatsby-plugin-typesense`,
+      options: {
+        publicDir: `${__dirname}/public/posts`,
+        collectionSchema: {
+          name: "posts",
+          ...
+        },
+        server: { ... },
+      },
+    },
+    {
+      resolve: `gatsby-plugin-typesense`,
+      options: {
+        publicDir: `${__dirname}/public/authors`,
+        collectionSchema: {
+          name: "authors",
+          ...
+        },
+        server: { ... },
+      },
+    },
+    ...
+  ]
+  ...
+}
+```
+
+Be sure to specify which collection you're querying from your search UI.
 
 ### 3️⃣ Markup your content
 
