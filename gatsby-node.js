@@ -93,11 +93,15 @@ exports.onPostBuild = async (
     server,
     collectionSchema,
     publicDir,
+    rootDir,
+    exclude,
     generateNewCollectionName = utils.generateNewCollectionName,
   }
 ) => {
   reporter.verbose("[Typesense] Getting list of HTML files")
-  const htmlFiles = await utils.getHTMLFilesRecursively(publicDir)
+  // backward compatibility
+  rootDir = rootDir || publicDir
+  const htmlFiles = await utils.getHTMLFilesRecursively(rootDir, rootDir, exclude)
 
   const typesense = new TypesenseClient(server)
   const newCollectionName = generateNewCollectionName(collectionSchema)
@@ -114,7 +118,7 @@ exports.onPostBuild = async (
   }
 
   for (const file of htmlFiles) {
-    const wwwPath = file.replace(publicDir, "").replace(/index\.html$/, "")
+    const wwwPath = file.replace(rootDir, "").replace(/index\.html$/, "")
     reporter.verbose(`[Typesense] Indexing ${wwwPath}`)
     const fileContents = (await fs.readFile(file)).toString()
     await indexContentInTypesense({
