@@ -195,6 +195,31 @@ module.exports = {
 
 Be sure to specify which collection you're querying from your search UI.
 
+#### Adding exclude directories
+
+Sometimes you migth want to exclude some directories
+  (for example, if you're creating a bilingual website and want to create two collections,
+  one for each language, so that a search from English part would only return
+  results from the English collection.)
+In this case, you can specify a regular expression of what directories should be excluded:
+
+```jsx
+module.exports = {
+  plugins: [
+    {
+      resolve: `gatsby-plugin-typesense`,
+      options: {
+        publicDir: `${__dirname}/public`,
+        exclude: /^\/ko/, // exclude sub-directories that begins with /ko
+        ...
+      },
+    },
+    ...
+  ]
+  ...
+}
+```
+
 ### 3️⃣ Markup your content
 
 Add a data attribute in this format to any HTML elements that contain the data you want to be indexed for that page:
