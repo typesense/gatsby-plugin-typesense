@@ -87,7 +87,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-typesense`,
       options: {
-        publicDir: `${__dirname}/public`, // Required
+        rootDir: `${__dirname}/public`, // Required
         collectionSchema: { // Required
           name: "pages_v1",
           fields: [
@@ -134,11 +134,13 @@ module.exports = {
 
 #### Here's what the options mean:
 
-##### `publicDir`
+##### `rootDir`
 
 The directory that the plugin will scan for HTML files to index. 
 
 This is the directory where Gatsby usually places your build files when you run `gatsby build`. This is almost always `./public` relative to your repo root, unless you've changed it.
+
+Note: This parameter was renamed from `publicDir` to `rootDir` recently. 
 
 ##### `collectionSchema`
 
@@ -150,7 +152,7 @@ While the schema in the example above is a great starting point, you can choose 
 
 ⚠️ This plugin expects these two fields to be present in the schema:
 
-- `page_path` - this is automatically set by the plugin based on the directory structure of `publicDir`
+- `page_path` - this is automatically set by the plugin based on the directory structure of `rootDir`
 - `page_priority_score` - this is set to `10` by default for all pages, but you can override this value for any page like this: `<div data-typesense-field="page_priority_score" style="display: none;">5</div>`
 
 ##### `server`
@@ -168,7 +170,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-typesense`,
       options: {
-        publicDir: `${__dirname}/public/posts`,
+        rootDir: `${__dirname}/public/posts`,
         collectionSchema: {
           name: "posts",
           ...
@@ -179,7 +181,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-typesense`,
       options: {
-        publicDir: `${__dirname}/public/authors`,
+        rootDir: `${__dirname}/public/authors`,
         collectionSchema: {
           name: "authors",
           ...
@@ -209,7 +211,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-typesense`,
       options: {
-        publicDir: `${__dirname}/public`,
+        rootDir: `${__dirname}/public`,
         exclude: /^\/ko/, // exclude sub-directories that begins with /ko
         ...
       },
