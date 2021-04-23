@@ -9,7 +9,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-typesense`,
       options: {
-        publicDir: `${__dirname}/public`, // Required
+        rootDir: `${__dirname}/public`, // Required
+        exclude: /^\/excluded/,
         collectionSchema: {
           // Required
           name: "pages_v1",

@@ -170,7 +170,8 @@ describe("gatsby-node.js", () => {
       })
 
     const pluginOptions = {
-      publicDir: `${__dirname}/support/testground/public`,
+      rootDir: `${__dirname}/support/testground/public`,
+      exclude: /^\/excluded/,
       collectionSchema: COLLECTION_SCHEMA,
       server: SERVER_CONFIG,
       generateNewCollectionName: jest.fn(() => NEW_COLLECTION_NAME),
