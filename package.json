@@ -34,14 +34,14 @@
     "search"
   ],
   "devDependencies": {
-    "@babel/runtime": "^7.10.2",
-    "axios-mock-adapter": "^1.18.2",
-    "jest": "^26.6.1",
-    "prettier": "^2.1.2"
+    "@babel/runtime": "^7.13.17",
+    "axios-mock-adapter": "^1.19.0",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "typesense": "^0.8.0"
+    "cheerio": "^1.0.0-rc.6",
+    "typesense": "^0.11.2"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.10.2"
