@@ -70,7 +70,7 @@ The simplest way to run a Typesense server is using Docker:
 
 ```
 mkdir /tmp/typesense-server-data
-docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.19.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors
+docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.22.0.rcu7 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors
 ```
 
 You can also download native binaries [here](https://typesense.org/downloads/).
