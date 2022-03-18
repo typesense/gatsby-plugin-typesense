@@ -1,18 +1,18 @@
 # gatsby-plugin-typesense [![NPM version][npm-image]][npm-url] [![CircleCI](https://circleci.com/gh/typesense/gatsby-plugin-typesense.svg?style=shield)](https://circleci.com/gh/typesense/gatsby-plugin-typesense)
 
-A Gatsby plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www.gatsbyjs.com/)-powered sites using [Typesense](http://typesense.org/). 
+A Gatsby plugin to build typo-tolerant Instant Search experiences on [Gatsby](https://www.gatsbyjs.com/)-powered sites using [Typesense](http://typesense.org/).
 
 This plugin runs post-build and indexes content from your site to Typesense. The search UI is then built with the [Typesense-InstantSearch.js](https://github.com/typesense/typesense-instantsearch-adapter) library.
 
-This plugin works for both static and dynamic Gatsby sites. It does not depend on you using Markdown, Frontmatter, or any particular Gatsby plugin. It does not even depend on React. So you can use it with really any type of Gatsby site. 
+This plugin works for both static and dynamic Gatsby sites. It does not depend on you using Markdown, Frontmatter, or any particular Gatsby plugin. It does not even depend on React. So you can use it with really any type of Gatsby site.
 
-#### What is Typesense? 
+#### What is Typesense?
 
 If you're new to Typesense, it is an **open source** search engine that is simple to use, run and scale, with clean APIs and documentation. Think of it as an open source alternative to Algolia and an easier-to-use, batteries-included alternative to ElasticSearch. Get a quick overview from [this guide](https://typesense.org/guide/).
 
 ## ✨ How it works
 
-On post build, this plugin scans Gatsby's public directory looking for HTML files. Within each HTML file, it looks for HTML elements that have a data attribute called `data-typesense-field` and creates a Typesense `Document` with the value of that data attribute as the key, and the text content of that HTML element as the value. 
+On post build, this plugin scans Gatsby's public directory looking for HTML files. Within each HTML file, it looks for HTML elements that have a data attribute called `data-typesense-field` and creates a Typesense `Document` with the value of that data attribute as the key, and the text content of that HTML element as the value.
 
 Here's an example: if you have the following HTML snippet in a file:
 
@@ -50,6 +50,59 @@ You'll then be able to query this collection of documents (pages) from Typesense
 
 You can also add any arbitrary fields to the document, by adding the `data-typesense-field` data attribute to any HTML element.
 
+## Internationalization (i18n)
+
+Internationalized sites will often have a page structure which doesn't quite
+fit into specific directories. For example:
+
+```
+/die-cut-stickers/       => Product collection, locale = en-gb
+/de/gestanzte-sticker/   => Product collection, locale = de-de
+/de/uber-uns/kultur/     => Pages collection, locale = de-de
+/de/uber-uns/buro/       => Pages collection, locale = de-de
+```
+
+To support this add the following in `gatsby-config.js`
+
+```json
+  plugins: [
+    ...
+    {
+      resolve: `gatsby-plugin-typesense`,
+      options: {
+        rootDir: `${__dirname}/public`, // Required
+        includeTags: { "data-typesense-model": "product" },
+        collectionSchema: {
+          name: "product",
+          ...
+        }
+      }
+    },
+    {
+      resolve: `gatsby-plugin-typesense`,
+      options: {
+        rootDir: `${__dirname}/public`, // Required
+        includeTags: { "data-typesense-model": "page" },
+        collectionSchema: {
+          name: "page",
+          ...
+        }
+      }
+    }
+    ...
+  ]
+```
+
+And this to your Pages:
+
+```html
+<div data-typesense-model="product"></div>
+
+or
+
+<div data-typesense-model="page"></div>
+```
+
 ## ⌨️ How to install
 
 ```bash
@@ -75,7 +128,7 @@ docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesen
 
 You can also download native binaries [here](https://typesense.org/downloads/).
 
-If you'd prefer a hosted version of Typesense, you can also spin up a cluster on [Typesense Cloud](https://cloud.typesense.org/). 
+If you'd prefer a hosted version of Typesense, you can also spin up a cluster on [Typesense Cloud](https://cloud.typesense.org/).
 
 ### 2️⃣ Configure the plugin
 
@@ -136,15 +189,15 @@ module.exports = {
 
 ##### `rootDir`
 
-The directory that the plugin will scan for HTML files to index. 
+The directory that the plugin will scan for HTML files to index.
 
 This is the directory where Gatsby usually places your build files when you run `gatsby build`. This is almost always `./public` relative to your repo root, unless you've changed it.
 
-Note: This parameter was renamed from `publicDir` to `rootDir` recently. 
+Note: This parameter was renamed from `publicDir` to `rootDir` recently.
 
 ##### `collectionSchema`
 
-The schema that will be used to create the collection in Typesense. 
+The schema that will be used to create the collection in Typesense.
 
 A quick recap of Typesense terminology, if you haven't already read [the guide](https://typesense.org/guide/): A `Collection` contains many `Documents`. You create a `Collection` with a specific schema and then all `Documents` that are added to that `Collection` will be validated against that schema. You issue search queries against a `Collection` of `Documents`.
 
@@ -156,7 +209,7 @@ While the schema in the example above is a great starting point, you can choose 
 - `page_priority_score` - this is set to `10` by default for all pages, but you can override this value for any page like this: `<div data-typesense-field="page_priority_score" style="display: none;">5</div>`
 
 ##### `server`
-Configuration details of your Typesense Cluster. 
+Configuration details of your Typesense Cluster.
 
 This config object is passed straight to the [typesense-js](https://github.com/typesense/typesense-js) client. So any option you'd use to configure the JS client can be used here.
 
@@ -240,7 +293,7 @@ When the plugin runs, it looks for this data attribute and will add a field with
 }
 ```
 
-If you have an array data type defined in the schema (useful when you need to index multiple sections on the same page to the same field), you can add the same `data-typesense-field="X"` attribute to multiple elements. 
+If you have an array data type defined in the schema (useful when you need to index multiple sections on the same page to the same field), you can add the same `data-typesense-field="X"` attribute to multiple elements.
 
 For example: let's say you have a `string[]` field called `array_field_defined_in_schema` in your schema.
 
@@ -275,7 +328,7 @@ This will index your content to your Typesense search cluster.
 
 The good folks over at Algolia have built and open-sourced [Instantsearch.js](https://github.com/algolia/instantsearch.js) which is a powerful collection of out-of-the-box UI components that you can use to compose interactive search experiences quickly.
 
-Typesense has an integration with InstantSearch.js (and its [React cousin](https://github.com/algolia/react-instantsearch)), that lets you use a Typesense cluster with InstantSearch.js. 
+Typesense has an integration with InstantSearch.js (and its [React cousin](https://github.com/algolia/react-instantsearch)), that lets you use a Typesense cluster with InstantSearch.js.
 
 Install InstantSearch and the Typesense Adapter in your Gatsby project:
 
@@ -332,7 +385,7 @@ Read more on how to use the Typesense adapter [here](https://github.com/typesens
 
 ## 🏗️ Local Development Workflow
 
-This section **only** applies if you're developing the plugin itself. 
+This section **only** applies if you're developing the plugin itself.
 
 ```bash
 
@@ -356,7 +409,7 @@ To release a new version, we use the np package:
 
 ```bash
 npm install --global np
-np 
+np
 
 # Follow instructions that np shows you
 ```
