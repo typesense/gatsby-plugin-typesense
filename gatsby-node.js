@@ -7,21 +7,21 @@ let utils = require("./lib/utils")
 
 function typeCastValue(fieldDefinition, attributeValue) {
   if (fieldDefinition.type.includes("int")) {
-    return parseInt(attributeValue);
+    return parseInt(attributeValue)
   }
   if (fieldDefinition.type.includes("float")) {
-    return parseFloat(attributeValue);
+    return parseFloat(attributeValue)
   }
   if (fieldDefinition.type.includes("bool")) {
     if (attributeValue.toLowerCase() === "false") {
-      return false;
+      return false
     }
     if (attributeValue === "0") {
-      return false;
+      return false
     }
-    return attributeValue.trim() !== "";
+    return attributeValue.trim() !== ""
   }
-  return attributeValue;
+  return attributeValue
 }
 
 async function indexContentInTypesense({
@@ -30,8 +30,27 @@ async function indexContentInTypesense({
   typesense,
   newCollectionSchema,
   reporter,
+  includeTags,
 }) {
   const $ = cheerio.load(fileContents)
+
+  if (includeTags) {
+    let include = false
+
+    Object.entries(includeTags).forEach(([tagName, testVal]) => {
+      const selector = `[${tagName}=${testVal}]`
+
+      if ($(selector).length > 0) {
+        include = true
+      }
+    })
+
+    if (!include) {
+      return Promise.resolve()
+    } else {
+      reporter.info(`[Typesense] including page: ${wwwPath}`)
+    }
+  }
 
   let typesenseDocument = {}
   $(`[${TYPESENSE_ATTRIBUTE_NAME}]`).each((index, element) => {
@@ -49,9 +68,14 @@ async function indexContentInTypesense({
 
     if (fieldDefinition.type.includes("[]")) {
       typesenseDocument[attributeName] = typesenseDocument[attributeName] || []
-      typesenseDocument[attributeName].push(typeCastValue(fieldDefinition, attributeValue))
+      typesenseDocument[attributeName].push(
+        typeCastValue(fieldDefinition, attributeValue)
+      )
     } else {
-      typesenseDocument[attributeName] = typeCastValue(fieldDefinition, attributeValue);
+      typesenseDocument[attributeName] = typeCastValue(
+        fieldDefinition,
+        attributeValue
+      )
     }
   })
 
@@ -95,13 +119,18 @@ exports.onPostBuild = async (
     publicDir,
     rootDir,
     exclude,
+    includeTags,
     generateNewCollectionName = utils.generateNewCollectionName,
   }
 ) => {
   reporter.verbose("[Typesense] Getting list of HTML files")
   // backward compatibility
   rootDir = rootDir || publicDir
-  const htmlFiles = await utils.getHTMLFilesRecursively(rootDir, rootDir, exclude)
+  const htmlFiles = await utils.getHTMLFilesRecursively(
+    rootDir,
+    rootDir,
+    exclude
+  )
 
   const typesense = new TypesenseClient(server)
   const newCollectionName = generateNewCollectionName(collectionSchema)
@@ -127,6 +156,7 @@ exports.onPostBuild = async (
       typesense,
       newCollectionSchema,
       reporter,
+      includeTags,
     })
   }
 
